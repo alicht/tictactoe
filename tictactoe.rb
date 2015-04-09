@@ -26,13 +26,27 @@ class TicTacToe
     @player2 = 'O'
     if play_game
       greeting
+      pick_symbol
       user_move
       computer_move
     end 
   end
+
+  def pick_symbol
+    puts "Select to be X or O"
+    @player1= gets.chomp.capitalize
+    if @player1 != 'X' && @player1 != 'O'
+      puts "incorrect symbol"
+      pick_symbol
+    else
+      if @player1 == 'O'
+        @player2 = 'X'
+      end
+    end
+  end
   
   def greeting
-  	puts ""
+    puts ""
     @computer = "Trey Anastasio"
     puts "Hello, my name is #{@computer} and welcome to Tic-Tac-Toe!"
     puts ""
@@ -47,7 +61,7 @@ class TicTacToe
     puts "#{@user_name} will be '#{@player1}' and #{@computer} will be '#{@player2}'"
     puts '------------------------------------------------------------------'
     puts "Directions: make a move by entering the letter & number representing
-    	 the slot youre trying to fill. For example, 'a1' , 'b2', 'c3', etc."
+       the slot youre trying to fill. For example, 'a1' , 'b2', 'c3', etc."
   end
   
   def show_board
@@ -105,7 +119,7 @@ class TicTacToe
     slots
   end
 
-	def computer_move
+  def computer_move
       move = find_move
       @slots[move] = @player2
       puts "#{@computer} selects #{move}"
@@ -163,6 +177,22 @@ class TicTacToe
       end
     end
   end
+
+  def is_game_over?
+    puts "Play Again?"
+    answer = gets.chomp.downcase
+
+    if answer == 'y'
+      @slots = {
+        "a1"=>" ", "a2"=>" ", "a3"=>" ",
+        "b1"=>" ", "b2"=>" ", "b3"=>" ",
+        "c1"=>" ", "c2"=>" ", "c3"=>" ", 
+      } 
+      false
+    else
+      true
+    end
+  end
     
   def check_board(next_move)
     
@@ -172,15 +202,16 @@ class TicTacToe
       # check to see if computer has won
       if times_in_slot(slot, @player2) == 3
         puts "GAME OVER... #{@computer} wins!"
-        game_over = true
+        game_over = is_game_over?
         show_board
       end
       
       # check to see if user has won
       if times_in_slot(slot, @player1) == 3
         puts "GAME OVER... #{@user_name} wins!"
-        game_over = true
+        game_over = is_game_over?
         show_board
+        
       end
     end
     
@@ -193,7 +224,19 @@ class TicTacToe
         end
       else
         puts "Tie game, try again!"
+        unless is_game_over?
+          user_move
+        else
+         puts "THE GAME IS OVER!"
+         show_board
+         abort
+        end
+
       end
+     else 
+      puts "THE GAME IS OVER!"
+      show_board
+      abort
     end
   end  
   
